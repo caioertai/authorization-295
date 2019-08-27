@@ -1,8 +1,16 @@
 class RestaurantsController < ApplicationController
+  skip_before_action :authenticate_user!, only: :index
   before_action :set_restaurant, only: [:show, :edit, :update, :destroy]
 
   def index
-    @restaurants = policy_scope(Restaurant)
+    @restaurants = policy_scope(Restaurant).geocoded
+
+    @markers = @restaurants.map do |restaurant|
+      {
+        lat: restaurant.latitude,
+        lng: restaurant.longitude
+      }
+    end
   end
 
   def show
@@ -60,6 +68,6 @@ class RestaurantsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def restaurant_params
-      params.require(:restaurant).permit(:name)
+      params.require(:restaurant).permit(:name, :address)
     end
 end

@@ -1,36 +1,43 @@
 <h1>Restaurants</h1>
+<p>
+  <%= link_to 'New Restaurant', new_restaurant_path, class: 'btn btn-secondary' if policy(Restaurant).new? %>
+</p>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @restaurants.each do |restaurant| %>
+<div class="index-map-layout">
+  <table class="table">
+    <thead>
       <tr>
-        <td><%= restaurant.name %></td>
-        <td><%= link_to 'Show', restaurant %></td>
-        <td>
-          <% if policy(restaurant).edit? %>
-            <%= link_to 'Edit', edit_restaurant_path(restaurant) %>
-          <% end %>
-        </td>
-        <td>
-          <% if policy(restaurant).destroy? %>
-            <%= link_to 'Destroy', restaurant, method: :delete, data: { confirm: 'Are you sure?' } %>
-          <% end %>
-
-        </td>
+        <th>Name</th>
+        <th>Address</th>
+        <th colspan="2"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
+    <tbody>
+      <% @restaurants.each do |restaurant| %>
+        <tr>
+          <td><%= link_to restaurant.name, restaurant %></td>
+          <td><%= restaurant.address %></td>
+          <td>
+            <% if policy(restaurant).edit? %>
+              <%= link_to 'Edit', edit_restaurant_path(restaurant) %>
+            <% end %>
+          </td>
+          <td>
+            <% if policy(restaurant).destroy? %>
+              <%= link_to 'Destroy', restaurant, method: :delete, data: { confirm: 'Are you sure?' } %>
+            <% end %>
 
-<% if policy(Restaurant).new? %>
-  <%= link_to 'New Restaurant', new_restaurant_path, class: 'btn btn-secondary' %>
-<% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div
+    id="map"
+    style="width: 100%;
+    height: 600px;"
+    data-markers="<%= @markers.to_json %>"
+    data-mapbox-api-key="<%= ENV['MAPBOX_KEY'] %>"
+  ></div>
+</div>

@@ -27,6 +27,8 @@ class RestaurantPolicy < ApplicationPolicy
   private
 
   def user_is_owner_or_admin?
+    return false unless user
+
     # record => a restaurant instance
     # user   => the current user
     record.user == user || user.admin?
